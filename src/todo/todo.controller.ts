@@ -1,16 +1,22 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Post } from '@nestjs/common';
 import { TodoService } from 'src/todo/todo.service';
+import { UtilService } from 'src/util/util.service';
 
 @Controller('todos')
 export class TodoController {
-  constructor(private readonly todoService: TodoService) {}
+  constructor(
+    private readonly todoService: TodoService,
+    private readonly utilService: UtilService,
+  ) {}
   @Post()
-  create(@Body() data: { title: string }) {
-    return this.todoService.create(data);
+  async create(@Body() data: { title: string }) {
+    const result = await this.todoService.create(data);
+    return this.utilService.apiResponse(HttpStatus.CREATED, result);
   }
 
   @Get()
   async getAll() {
-    return this.todoService.getAll();
+    const result = await this.todoService.getAll();
+    return this.utilService.apiResponse(HttpStatus.OK, result);
   }
 }

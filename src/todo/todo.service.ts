@@ -9,9 +9,9 @@ export class TodoService {
     private readonly db: BetterSQLite3Database<typeof schema>,
   ) {}
 
-  create(data: { title: string }) {
-    const result = this.db.insert(schema.todos).values(data).returning();
-    return result.get().id;
+  async create(data: { title: string }) {
+    const result = await this.db.insert(schema.todos).values(data).returning();
+    return result;
   }
 
   async getAll() {
